@@ -1,24 +1,33 @@
 #include "solver.h"
 
-// z - результат второго уравнения
-double total_func(double x, double y, double z)
+double right_expr(double x, double z1, double z2)
 {
-	return -1 * px_func(x) * y - qx_func(x) * z + fxy_func(x, z);
+	return -1 * px_func(x) * z2 - qx_func(x) * z1 + fxy_func(x, z1);
 }
 
-void solving_step(uint index, double *x, double *y, double *z, double h)
+double calculate_const(double x, double y, double z)
 {
-	// Шаг предиктора (метод Адамса-Башфорта).
-	y[index] = y[index - 1] + h * (1901.0 / 720 * total_func(x[index - 1], y[index - 1], z[index - 1]) -
-								   1387.0 / 360 * total_func(x[index - 2], y[index - 2], z[index - 2]) +
-								   109.0 / 30 * total_func(x[index - 3], y[index - 3], z[index - 3]) -
-								   637.0 / 360 * total_func(x[index - 4], y[index - 4], z[index - 4]) +
-								   251.0 / 720 * total_func(x[index - 5], y[index - 5], z[index - 5]));
+	return y - z * x;
+}
 
-	// Шаг корректора (методы Адамса-Мултона).
-	y[index] = y[index - 1] + h / 720 * (251 * total_func(x[index], y[index], z[index]) +
-								         646 * total_func(x[index - 1], y[index - 1], z[index - 1]) -
-										 264 * total_func(x[index - 2], y[index - 2], z[index - 2]) +
-										 106 * total_func(x[index - 3], y[index - 3], z[index - 3]) -
-										 19 * total_func(x[index - 4], y[index - 4], z[index - 4]));
+void z1_step(uint idx, double *z1, double x, double z2, double c)
+{
+	z1[idx] = z2 * x + c;
+}
+
+void z2_step(uint idx, double *z2, double *x, double *z1, double h)
+{
+	// Predictor step:
+	z2[idx] = z2[idx - 1] + h * (1901.0 / 720 * right_expr(x[idx - 1], z2[idx - 1], z1[idx - 1]) -
+								 1387.0 / 360 * right_expr(x[idx - 2], z2[idx - 2], z1[idx - 2]) +
+								 109.0  / 30  * right_expr(x[idx - 3], z2[idx - 3], z1[idx - 3]) -
+								 637.0  / 360 * right_expr(x[idx - 4], z2[idx - 4], z1[idx - 4]) +
+								 251.0  / 720 * right_expr(x[idx - 5], z2[idx - 5], z1[idx - 5]));
+
+	// Corrector step:
+	z2[idx] = z2[idx - 1] + h / 720 * (251 * right_expr(x[idx], z2[idx], z1[idx]) +
+									   646 * right_expr(x[idx - 1], z2[idx - 1], z1[idx - 1]) -
+									   264 * right_expr(x[idx - 2], z2[idx - 2], z1[idx - 2]) +
+									   106 * right_expr(x[idx - 3], z2[idx - 3], z1[idx - 3]) -
+									   19  * right_expr(x[idx - 4], z2[idx - 4], z1[idx - 4]));
 }

@@ -6,5 +6,8 @@
 
 typedef unsigned int uint;
 
-double total_func(double x, double y, double z);
-void solving_step(uint index, double *x, double *y, double *z, double h);
+double right_expr(double x, double z1, double z2);
+double calculate_const(double x, double y, double z);
+
+void z1_step(uint idx, double *z1, double x, double z2, double c);
+void z2_step(uint idx, double *z2, double *x, double *z1, double h);
