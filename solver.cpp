@@ -1,33 +1,38 @@
 #include "solver.h"
 
-double right_expr(double x, double z1, double z2)
+double right_expr_z1(double x, double z1, double z2)
+{
+	return z2;
+}
+
+double right_expr_z2(double x, double z2, double z1)
 {
 	return -1 * px_func(x) * z2 - qx_func(x) * z1 + fxy_func(x, z1);
 }
 
-double calculate_const(double x, double y, double z)
+void rk_step(uint idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double))
 {
-	return y - z * x;
+	double k1 = expr(arg[idx - 1], cur[idx - 1], other[idx - 1]);
+	double k2 = expr(arg[idx - 1] + step / 2, cur[idx - 1] + k1 * step / 2, other[idx - 1]);
+	double k3 = expr(arg[idx - 1] + step / 2, cur[idx - 1] + k2 * step / 2, other[idx - 1]);
+	double k4 = expr(arg[idx - 1] + step, cur[idx - 1] + k3 * step, other[idx - 1]);
+
+	cur[idx] = cur[idx - 1] + step / 6 * (k1 + 2 * k2 + 2 * k3 + k4);
 }
 
-void z1_step(uint idx, double *z1, double x, double z2, double c)
-{
-	z1[idx] = z2 * x + c;
-}
-
-void z2_step(uint idx, double *z2, double *x, double *z1, double h)
+void adams_step(uint idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double))
 {
 	// Predictor step:
-	z2[idx] = z2[idx - 1] + h * (1901.0 / 720 * right_expr(x[idx - 1], z2[idx - 1], z1[idx - 1]) -
-								 1387.0 / 360 * right_expr(x[idx - 2], z2[idx - 2], z1[idx - 2]) +
-								 109.0  / 30  * right_expr(x[idx - 3], z2[idx - 3], z1[idx - 3]) -
-								 637.0  / 360 * right_expr(x[idx - 4], z2[idx - 4], z1[idx - 4]) +
-								 251.0  / 720 * right_expr(x[idx - 5], z2[idx - 5], z1[idx - 5]));
+	cur[idx] = cur[idx - 1] + step * (1901.0 / 720 * expr(arg[idx - 1], cur[idx - 1], other[idx - 1]) -
+								      1387.0 / 360 * expr(arg[idx - 2], cur[idx - 2], other[idx - 2]) +
+								      109.0  / 30  * expr(arg[idx - 3], cur[idx - 3], other[idx - 3]) -
+								      637.0  / 360 * expr(arg[idx - 4], cur[idx - 4], other[idx - 4]) +
+								      251.0  / 720 * expr(arg[idx - 5], cur[idx - 5], other[idx - 5]));
 
 	// Corrector step:
-	z2[idx] = z2[idx - 1] + h / 720 * (251 * right_expr(x[idx], z2[idx], z1[idx]) +
-									   646 * right_expr(x[idx - 1], z2[idx - 1], z1[idx - 1]) -
-									   264 * right_expr(x[idx - 2], z2[idx - 2], z1[idx - 2]) +
-									   106 * right_expr(x[idx - 3], z2[idx - 3], z1[idx - 3]) -
-									   19  * right_expr(x[idx - 4], z2[idx - 4], z1[idx - 4]));
+	cur[idx] = cur[idx - 1] + step / 720 * (251 * expr(arg[idx], cur[idx], other[idx]) +
+											646 * expr(arg[idx - 1], cur[idx - 1], other[idx - 1]) -
+									        264 * expr(arg[idx - 2], cur[idx - 2], other[idx - 2]) +
+									        106 * expr(arg[idx - 3], cur[idx - 3], other[idx - 3]) -
+									        19  * expr(arg[idx - 4], cur[idx - 4], other[idx - 4]));
 }

@@ -6,8 +6,8 @@
 
 typedef unsigned int uint;
 
-double right_expr(double x, double z1, double z2);
-double calculate_const(double x, double y, double z);
+double right_expr_z1(double x, double z1, double z2);
+double right_expr_z2(double x, double z2, double z1);
 
-void z1_step(uint idx, double *z1, double x, double z2, double c);
-void z2_step(uint idx, double *z2, double *x, double *z1, double h);
+void rk_step(uint idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double));
+void adams_step(uint idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double));
