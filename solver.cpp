@@ -1,5 +1,25 @@
 #include "solver.h"
 
+double vector_distance(uint len, double *y1, double *y2)
+{
+	double res = 0;
+
+	for (uint i = 0, j = 0; i < len; i += 2, ++j)
+		res += pow(y1[i] - y2[j], 2);
+
+	return sqrt(res);
+}
+
+double numerical_derivative(double x, double (*func)(double), double step)
+{
+	return (func(x + step) - func(x - step)) / (2 * step);
+}
+
+double newton_step(double x, double (*func)(double), double step)
+{
+	return x - func(x) / numerical_derivative(x, func, step);
+}
+
 double right_expr_z1(double x, double z1, double z2)
 {
 	return z2;
