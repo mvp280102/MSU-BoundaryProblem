@@ -22,17 +22,23 @@ void rk_step(uint idx, double *arg, double *cur, double *other, double step, dou
 
 void adams_step(uint idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double))
 {
+	double predictor_cfs[ACC_ORDER] = { 1901.0 / 720, 1387.0 / 360, 109.0 / 30, 637.0 / 360, 251.0 / 720 },
+		   corrector_cfs[ACC_ORDER] = { 251.0 / 720, 646.0 / 720, 264.0 / 720, 106.0 / 720, 19.0 / 720 };
+
+	double predictor_value = 0,
+		   corrector_value = 0;
+
 	// Predictor step:
-	cur[idx] = cur[idx - 1] + step * (1901.0 / 720 * expr(arg[idx - 1], cur[idx - 1], other[idx - 1]) -
-								      1387.0 / 360 * expr(arg[idx - 2], cur[idx - 2], other[idx - 2]) +
-								      109.0  / 30  * expr(arg[idx - 3], cur[idx - 3], other[idx - 3]) -
-								      637.0  / 360 * expr(arg[idx - 4], cur[idx - 4], other[idx - 4]) +
-								      251.0  / 720 * expr(arg[idx - 5], cur[idx - 5], other[idx - 5]));
+
+	for (uint i = 0; i < ACC_ORDER; ++i)
+		predictor_value += predictor_cfs[i] * expr(arg[idx - i - 1], cur[idx - i - 1], other[idx - i - 1]) * (i & 1 ? -1 : 1);
+
+	cur[idx] = cur[idx - 1] + step * predictor_value;
 
 	// Corrector step:
-	cur[idx] = cur[idx - 1] + step / 720 * (251 * expr(arg[idx], cur[idx], other[idx - 1]) +
-											646 * expr(arg[idx - 1], cur[idx - 1], other[idx - 1]) -
-									        264 * expr(arg[idx - 2], cur[idx - 2], other[idx - 2]) +
-									        106 * expr(arg[idx - 3], cur[idx - 3], other[idx - 3]) -
-									        19  * expr(arg[idx - 4], cur[idx - 4], other[idx - 4]));
+
+	for (uint i = 0; i < ACC_ORDER; ++i)
+		corrector_value += corrector_cfs[i] * expr(arg[idx - i], cur[idx - i], other[!i ? idx - 1 : idx - i]) * (!i || i & 1 ? 1 : -1);
+
+	cur[idx] = cur[idx - 1] + step * corrector_value;
 }

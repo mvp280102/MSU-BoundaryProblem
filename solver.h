@@ -4,7 +4,7 @@
 #include "qx_func.h"
 #include "fxy_func.h"
 
-#include <cstdio>
+#define ACC_ORDER 5
 
 typedef unsigned int uint;
 
