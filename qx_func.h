@@ -1,6 +1,3 @@
 #pragma once
 
-double qx_func(double x)
-{
-	return x + 5;
-}
+double qx_func(double x);
