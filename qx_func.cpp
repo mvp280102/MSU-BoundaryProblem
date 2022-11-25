@@ -2,5 +2,5 @@
 
 double qx_func(double x)
 {
-	return x + 5;
+	return -1;
 }
