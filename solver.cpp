@@ -30,7 +30,7 @@ void adams_step(uint idx, double *arg, double *cur, double *other, double step, 
 								      251.0  / 720 * expr(arg[idx - 5], cur[idx - 5], other[idx - 5]));
 
 	// Corrector step:
-	cur[idx] = cur[idx - 1] + step / 720 * (251 * expr(arg[idx], cur[idx], other[idx]) +
+	cur[idx] = cur[idx - 1] + step / 720 * (251 * expr(arg[idx], cur[idx], other[idx - 1]) +
 											646 * expr(arg[idx - 1], cur[idx - 1], other[idx - 1]) -
 									        264 * expr(arg[idx - 2], cur[idx - 2], other[idx - 2]) +
 									        106 * expr(arg[idx - 3], cur[idx - 3], other[idx - 3]) -

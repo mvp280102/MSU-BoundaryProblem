@@ -4,6 +4,8 @@
 #include "qx_func.h"
 #include "fxy_func.h"
 
+#include <cstdio>
+
 typedef unsigned int uint;
 
 double right_expr_z1(double x, double z1, double z2);
