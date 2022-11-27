@@ -2,5 +2,5 @@
 
 double fxy_func(double x, double y)
 {
-	return 2 * x;
+	return 1;
 }
