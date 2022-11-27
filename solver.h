@@ -6,6 +6,7 @@
 
 #include <cstdio>
 #include <cmath>
+#include <mem.h>
 
 #define ACC_ORDER 5
 
@@ -23,6 +24,7 @@ struct BoundaryData
 
 double vector_distance(uint len, double *y1, double *y2);
 double runge_error_step(BoundaryData *data_n, double arg, double *res_n, double *res_2n, double eps);
+void runge_error_solve(BoundaryData *data, double arg, double **res, double eps);
 
 double numerical_derivative(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*));
 double newton_step(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*));

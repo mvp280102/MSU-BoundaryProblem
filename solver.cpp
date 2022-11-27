@@ -4,8 +4,8 @@ double vector_distance(uint len, double *y1, double *y2)
 {
 	double res = 0;
 
-	for (uint i = 0, j = 0; i < len; i += 2, ++j)
-		res += pow(y1[i] - y2[j], 2);
+	for (uint i = 0; i < len; ++i)
+		res += pow(y1[i] - y2[2 * i], 2);
 
 	return sqrt(res) / len;
 }
@@ -18,7 +18,22 @@ double runge_error_step(BoundaryData *data_n, double arg, double *res_n, double 
 	newton_solve(data_n, arg, res_n, eps);
 	newton_solve(&data_2n, arg, res_2n, eps);
 
-	return vector_distance(data_2n.intervals + 1, res_n, res_2n) / ((1 << ACC_ORDER) - 1);
+	return vector_distance(data_n->intervals + 1, res_n, res_2n) / ((1 << ACC_ORDER) - 1);
+}
+
+void runge_error_solve(BoundaryData *data, double arg, double **res, double eps)
+{
+	auto *res_doubled = (double*)malloc(sizeof(double) * (data->intervals * 2 + 1));
+
+	while (runge_error_step(data, -1, *res, res_doubled, eps) > eps)
+	{
+		data->intervals *= 2;
+		*res = (double*)realloc(*res, sizeof(double) * (data->intervals + 1));
+		memcpy(*res, res_doubled, sizeof(double) * data->intervals + 1);
+		res_doubled = (double*)realloc(res_doubled, sizeof(double) * (data->intervals * 2 + 1));
+	}
+
+	free(res_doubled);
 }
 
 double numerical_derivative(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*))
