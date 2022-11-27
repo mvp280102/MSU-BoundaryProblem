@@ -22,6 +22,7 @@ struct BoundaryData
 };
 
 double vector_distance(uint len, double *y1, double *y2);
+double runge_error_step(BoundaryData *data_n, double arg, double *res_n, double *res_2n, double eps);
 
 double numerical_derivative(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*));
 double newton_step(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*));

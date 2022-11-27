@@ -10,6 +10,17 @@ double vector_distance(uint len, double *y1, double *y2)
 	return sqrt(res) / len;
 }
 
+double runge_error_step(BoundaryData *data_n, double arg, double *res_n, double *res_2n, double eps)
+{
+	BoundaryData data_2n = *data_n;
+	data_2n.intervals *= 2;
+
+	newton_solve(data_n, arg, res_n, eps);
+	newton_solve(&data_2n, arg, res_2n, eps);
+
+	return vector_distance(data_2n.intervals + 1, res_n, res_2n) / ((1 << ACC_ORDER) - 1);
+}
+
 double numerical_derivative(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*))
 {
 	double step = (data->arg_b - data->arg_a) / data->intervals;
