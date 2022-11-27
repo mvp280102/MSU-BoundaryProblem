@@ -6,14 +6,12 @@
 void show_array(uint len, double *arr)
 {
 	for (uint i = 0; i < len; ++i)
-		printf("%f ", arr[i]);
-
-	printf("\n");
+		printf("%f\n", arr[i]);
 }
 
 int main(int argc, char *argv[])
 {
-	double eps, der_a, diff, *y_array;
+	double eps, *y_array;
 
 	BoundaryData data = {};
 
@@ -26,25 +24,16 @@ int main(int argc, char *argv[])
 
 		y_array = (double*)malloc(sizeof(double) * (data.intervals + 1));
 
-		diff = boundary_solve(data, -1, y_array);
+		runge_error_solve(&data, -1, &y_array, eps);
 
-		while (fabs(diff) > eps)
-		{
-			der_a = newton_step(data, diff, y_array, boundary_solve);
-			diff = boundary_solve(data, der_a, y_array);
-		}
-
-		printf("der_a = %lf\n\n", der_a);
-
+		printf("len = %d\n", data.intervals);
 		printf("y_array:\n");
 		show_array(data.intervals + 1, y_array);
 
-		fprintf(out_file, "%lf %lf %d\n", data.arg_a, data.arg_b, data.intervals);
+		fprintf(out_file, "%d\n", data.intervals);
 
 		for (uint i = 0; i < data.intervals + 1; ++i)
 			fprintf(out_file, "%lf\n", y_array[i]);
-
-		system("python plot.py");
 
 		free(y_array);
 
