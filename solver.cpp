@@ -21,6 +21,17 @@ double newton_step(BoundaryData *data, double arg, double *res, double (*func)(B
 	return arg - func(data, arg, res) / numerical_derivative(data, arg, res, func);
 }
 
+void newton_solve(BoundaryData *data, double arg, double *res, double eps)
+{
+	double der_a, diff = rk_adams_solve(data, arg, res);
+
+	while (fabs(diff) > eps)
+	{
+		der_a = newton_step(data, diff, res, rk_adams_solve);
+		diff = rk_adams_solve(data, der_a, res);
+	}
+}
+
 double right_expr_z1(double x, double z1, double z2)
 {
 	return z2;
