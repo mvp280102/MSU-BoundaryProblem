@@ -7,16 +7,16 @@ double vector_distance(uint len, double *y1, double *y2)
 	for (uint i = 0, j = 0; i < len; i += 2, ++j)
 		res += pow(y1[i] - y2[j], 2);
 
-	return sqrt(res);
+	return sqrt(res) / len;
 }
 
-double numerical_derivative(BoundaryData data, double arg, double *res, double (*func)(BoundaryData, double, double*))
+double numerical_derivative(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*))
 {
-	double step = (data.arg_b - data.arg_a) / data.intervals;
+	double step = (data->arg_b - data->arg_a) / data->intervals;
 	return (func(data, arg + step, res) - func(data, arg - step, res)) / (2 * step);
 }
 
-double newton_step(BoundaryData data, double arg, double *res, double (*func)(BoundaryData, double, double*))
+double newton_step(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*))
 {
 	return arg - func(data, arg, res) / numerical_derivative(data, arg, res, func);
 }
@@ -64,36 +64,36 @@ void adams_step(uint idx, double *arg, double *cur, double *other, double step, 
 	cur[idx] = cur[idx - 1] + step * corrector_value;
 }
 
-double boundary_solve(BoundaryData data, double der_a, double *result)
+double rk_adams_solve(BoundaryData *data, double der_a, double *res)
 {
-	double step = (data.arg_b - data.arg_a) / data.intervals;
+	double step = (data->arg_b - data->arg_a) / data->intervals;
 
-	auto *x_array = (double*)malloc(sizeof(double) * (data.intervals + 1));
-	x_array[0] = data.arg_a;
-	x_array[data.intervals] = data.arg_b;
+	auto *x_array = (double*)malloc(sizeof(double) * (data->intervals + 1));
+	x_array[0] = data->arg_a;
+	x_array[data->intervals] = data->arg_b;
 
-	auto *z_array = (double*)malloc(sizeof(double) * (data.intervals + 1));
+	auto *z_array = (double*)malloc(sizeof(double) * (data->intervals + 1));
 	z_array[0] = der_a;
 
-	result[0] = data.func_a;
+	res[0] = data->func_a;
 
-	for (uint i = 1; i < data.intervals; ++i)
+	for (uint i = 1; i < data->intervals; ++i)
 		x_array[i] = x_array[i - 1] + step;
 
 	for (uint i = 1; i < ACC_ORDER; ++i)
 	{
-		rk_step(i, x_array, result, z_array, step, right_expr_z1);
-		rk_step(i, x_array, z_array, result, step, right_expr_z2);
+		rk_step(i, x_array, res, z_array, step, right_expr_z1);
+		rk_step(i, x_array, z_array, res, step, right_expr_z2);
 	}
 
-	for (uint i = ACC_ORDER; i < data.intervals + 1; ++i)
+	for (uint i = ACC_ORDER; i < data->intervals + 1; ++i)
 	{
-		adams_step(i, x_array, result, z_array, step, right_expr_z1);
-		adams_step(i, x_array, z_array, result, step, right_expr_z2);
+		adams_step(i, x_array, res, z_array, step, right_expr_z1);
+		adams_step(i, x_array, z_array, res, step, right_expr_z2);
 	}
 
 	free(z_array);
 	free(x_array);
 
-	return result[data.intervals] - data.func_b;
+	return res[data->intervals] - data->func_b;
 }
