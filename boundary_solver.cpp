@@ -1,4 +1,4 @@
-#include "solver.h"
+#include "boundary_solver.h"
 
 double vector_distance(uint len, double *y1, double *y2)
 {

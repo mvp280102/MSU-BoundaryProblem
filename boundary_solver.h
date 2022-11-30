@@ -6,8 +6,6 @@
 
 #define ACC_ORDER 5
 
-typedef unsigned int uint;
-
 // Начальные данные для решения краевой задачи.
 struct BoundaryData
 {
