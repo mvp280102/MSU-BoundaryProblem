@@ -134,3 +134,9 @@ double rk_adams_solve(BoundaryData *data, double der_a, double *res)
 
 	return res[data->intervals] - data->func_b;
 }
+
+void array_output(uint len, double *arr)
+{
+	for (uint i = 0; i < len; ++i)
+		printf("%f\n", arr[i]);
+}
