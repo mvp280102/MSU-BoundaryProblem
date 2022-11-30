@@ -4,8 +4,8 @@
 #include <cstdio>
 
 // Работа с памятью:
-#include <cstdlib>
 #include <mem.h>
+#include <cstdlib>
 
 // Математические функции:
 #include <cmath>
