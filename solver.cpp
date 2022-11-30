@@ -86,14 +86,10 @@ void adams_step(uint idx, double *arg, double *cur, double *other, double step, 
 	double predictor_value = 0,
 		   corrector_value = 0;
 
-	// Predictor step:
-
 	for (uint i = 0; i < ACC_ORDER; ++i)
 		predictor_value += predictor_cfs[i] * expr(arg[idx - i - 1], cur[idx - i - 1], other[idx - i - 1]) * (i & 1 ? -1 : 1);
 
 	cur[idx] = cur[idx - 1] + step * predictor_value;
-
-	// Corrector step:
 
 	for (uint i = 0; i < ACC_ORDER; ++i)
 		corrector_value += corrector_cfs[i] * expr(arg[idx - i], cur[idx - i], other[!i ? idx - 1 : idx - i]) * (!i || i & 1 ? 1 : -1);
@@ -140,10 +136,4 @@ double step_fill(uint len, double *arr, double start, double stop)
 		arr[i] = arr[i - 1] + step;
 
 	return step;
-}
-
-void array_output(uint len, double *arr)
-{
-	for (uint i = 0; i < len; ++i)
-		printf("%f\n", arr[i]);
 }

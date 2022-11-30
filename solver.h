@@ -63,4 +63,3 @@ void runge_error_solve(BoundaryData *data, double arg, double **res, double eps)
 
 //// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ:
 double step_fill(uint len, double *arr, double start, double stop);
-void array_output(uint len, double *arr);
