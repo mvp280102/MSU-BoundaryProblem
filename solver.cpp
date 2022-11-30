@@ -25,7 +25,7 @@ void runge_error_solve(BoundaryData *data, double arg, double **res, double eps)
 {
 	auto *res_doubled = (double*)malloc(sizeof(double) * (data->intervals * 2 + 1));
 
-	while (runge_error_step(data, -1, *res, res_doubled, eps) > eps)
+	while (runge_error_step(data, arg, *res, res_doubled, eps) > eps)
 	{
 		data->intervals *= 2;
 		*res = (double*)realloc(*res, sizeof(double) * (data->intervals + 1));
@@ -103,19 +103,13 @@ void adams_step(uint idx, double *arg, double *cur, double *other, double step, 
 
 double rk_adams_solve(BoundaryData *data, double der_a, double *res)
 {
-	double step = (data->arg_b - data->arg_a) / data->intervals;
-
 	auto *x_array = (double*)malloc(sizeof(double) * (data->intervals + 1));
-	x_array[0] = data->arg_a;
-	x_array[data->intervals] = data->arg_b;
+	auto step = step_fill(data->intervals + 1, x_array, data->arg_a, data->arg_b);
 
 	auto *z_array = (double*)malloc(sizeof(double) * (data->intervals + 1));
 	z_array[0] = der_a;
 
 	res[0] = data->func_a;
-
-	for (uint i = 1; i < data->intervals; ++i)
-		x_array[i] = x_array[i - 1] + step;
 
 	for (uint i = 1; i < ACC_ORDER; ++i)
 	{
@@ -133,6 +127,19 @@ double rk_adams_solve(BoundaryData *data, double der_a, double *res)
 	free(x_array);
 
 	return res[data->intervals] - data->func_b;
+}
+
+double step_fill(uint len, double *arr, double start, double stop)
+{
+	double step = (stop - start) / (len - 1);
+
+	arr[0] = start;
+	arr[len - 1] = stop;
+
+	for (uint i = 1; i < len - 1; ++i)
+		arr[i] = arr[i - 1] + step;
+
+	return step;
 }
 
 void array_output(uint len, double *arr)
