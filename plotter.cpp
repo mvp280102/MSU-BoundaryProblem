@@ -1,4 +1,4 @@
-#include "plot_builder.h"
+#include "plotter.h"
 
 void plot_build(uint size, uint len, double *arg, double *res, char* filename)
 {
@@ -18,4 +18,6 @@ void plot_build(uint size, uint len, double *arg, double *res, char* filename)
 		printf("%ls\nAborting program!\n", error_message->string);
 		exit(1);
 	}
+
+	FreeAllocations();
 }
