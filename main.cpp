@@ -1,17 +1,9 @@
-#include "solver.h"
-
-#include <cstdio>
-#include <cstdlib>
-
-void show_array(uint len, double *arr)
-{
-	for (uint i = 0; i < len; ++i)
-		printf("%f\n", arr[i]);
-}
+#include "boundary_solver.h"
+#include "plot_builder.h"
 
 int main(int argc, char *argv[])
 {
-	double eps, *y_array;
+	double eps, *x_array, *y_array;
 
 	BoundaryData data = {};
 
@@ -26,15 +18,17 @@ int main(int argc, char *argv[])
 
 		runge_error_solve(&data, -1, &y_array, eps);
 
-		printf("len = %d\n", data.intervals);
-		printf("y_array:\n");
-		show_array(data.intervals + 1, y_array);
+		x_array = (double*)malloc(sizeof(double) * (data.intervals + 1));
+		step_fill(data.intervals + 1, x_array, data.arg_a, data.arg_b);
 
 		fprintf(out_file, "%d\n", data.intervals);
 
 		for (uint i = 0; i < data.intervals + 1; ++i)
 			fprintf(out_file, "%lf\n", y_array[i]);
 
+		plot_build(1024, data.intervals + 1, x_array, y_array, (char*)"plot.png");
+
+		free(x_array);
 		free(y_array);
 
 		fclose(out_file);
