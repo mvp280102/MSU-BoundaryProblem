@@ -18,7 +18,7 @@ void plot_build(uint size, uint len, double *arg, double *res, char* filename)
 	}
 	else
 	{
-		printf("%ls\nAborting program!\n", error_message->string);
+		printf("%ls\nAborting application!\n", error_message->string);
 		exit(1);
 	}
 
