@@ -2,5 +2,5 @@
 
 double px_func(double x)
 {
-	return 0;
+	return -2 * x;
 }
