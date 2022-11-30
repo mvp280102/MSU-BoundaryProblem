@@ -9,3 +9,10 @@
 
 // Математические функции:
 #include <cmath>
+
+// Построение графика (pbPlots):
+#include "pb_plots.h"
+#include "lib_support.h"
+
+// Для удобства написания кода:
+typedef unsigned int uint;
