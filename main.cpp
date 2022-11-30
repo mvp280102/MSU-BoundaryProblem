@@ -1,5 +1,5 @@
-#include "boundary_solver.h"
-#include "plot_builder.h"
+#include "solver.h"
+#include "plotter.h"
 
 int main(int argc, char *argv[])
 {
