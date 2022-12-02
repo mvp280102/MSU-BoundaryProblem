@@ -1,4 +1,7 @@
 .idea/
+plot.png
+input.txt
+output.txt
 CMakeLists.txt
 /cmake-build-debug/
 /cmake-build-release/
