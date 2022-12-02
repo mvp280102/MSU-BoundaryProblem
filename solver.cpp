@@ -65,7 +65,7 @@ double right_expr_z1(double x, double z1, double z2)
 
 double right_expr_z2(double x, double z2, double z1)
 {
-	return -1 * px_func(x) * z2 - qx_func(x) * z1 + fxy_func(x, z1);
+	return -1 * px_func(x, z1) * z2 - qx_func(x, z1) * z1 + fxy_func(x, z1);
 }
 
 void rk_step(uint idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double))
