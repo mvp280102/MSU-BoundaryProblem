@@ -1,72 +1,22 @@
 #include "solver.h"
 
-double vector_distance(uint len, double *y1, double *y2)
-{
-	double res = 0;
 
-	for (uint i = 0; i < len; ++i)
-		res += pow(y1[i] - y2[2 * i], 2);
+//// ФУНКЦИИ СИСТЕМЫ ДИФФЕРЕНЦИАЛЬНЫХ УРАВНЕНИЙ, К КОТОРОЙ СВОДИТСЯ ИСХОДНАЯ КРАЕВАЯ ЗАДАЧА:
 
-	return sqrt(res) / len;
-}
-
-double runge_error_step(BoundaryData *data_n, double arg, double *res_n, double *res_2n, double eps)
-{
-	BoundaryData data_2n = *data_n;
-	data_2n.intervals *= 2;
-
-	newton_solve(data_n, arg, res_n, eps);
-	newton_solve(&data_2n, arg, res_2n, eps);
-
-	return vector_distance(data_n->intervals + 1, res_n, res_2n) / ((1 << ACC_ORDER) - 1);
-}
-
-void runge_error_solve(BoundaryData *data, double arg, double **res, double eps)
-{
-	auto *res_doubled = (double*)malloc(sizeof(double) * (data->intervals * 2 + 1));
-
-	while (runge_error_step(data, arg, *res, res_doubled, eps) > eps)
-	{
-		data->intervals *= 2;
-		*res = (double*)realloc(*res, sizeof(double) * (data->intervals + 1));
-		memcpy(*res, res_doubled, sizeof(double) * data->intervals + 1);
-		res_doubled = (double*)realloc(res_doubled, sizeof(double) * (data->intervals * 2 + 1));
-	}
-
-	free(res_doubled);
-}
-
-double numerical_derivative(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*))
-{
-	double step = (data->arg_b - data->arg_a) / data->intervals;
-	return (func(data, arg + step, res) - func(data, arg - step, res)) / (2 * step);
-}
-
-double newton_step(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*))
-{
-	return arg - func(data, arg, res) / numerical_derivative(data, arg, res, func);
-}
-
-void newton_solve(BoundaryData *data, double arg, double *res, double eps)
-{
-	double der_a, diff = rk_adams_solve(data, arg, res);
-
-	while (fabs(diff) > eps)
-	{
-		der_a = newton_step(data, diff, res, rk_adams_solve);
-		diff = rk_adams_solve(data, der_a, res);
-	}
-}
-
+// Возвращает значение первого уравнения системы на текущем шаге.
 double right_expr_z1(double x, double z1, double z2)
 {
 	return z2;
 }
 
+// Возвращает значение второго уравнения системы на текущем шаге.
 double right_expr_z2(double x, double z2, double z1)
 {
 	return -1 * px_func(x, z1) * z2 - qx_func(x, z1) * z1 + fxy_func(x, z1);
 }
+
+
+//// ФУНКЦИИ ЧИСЛЕННЫХ МЕТОДОВ РЕШЕНИЯ СИСТЕМЫ ДИФФЕРЕНЦИАЛЬНЫХ УРАВНЕНИЙ:
 
 void rk_step(uint idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double))
 {
@@ -125,6 +75,83 @@ double rk_adams_solve(BoundaryData *data, double der_a, double *res)
 	return res[data->intervals] - data->func_b;
 }
 
+
+//// ФУНКЦИИ ЧИСЛЕННЫХ МЕТОДОВ РЕШЕНИЯ ВСПОМОГАТЕЛЬНОГО УРАВНЕНИЯ ДЛЯ ВЫЧИСЛЕНИЯ ЗНАЧЕНИЯ ПРОИЗВОДНОЙ НА ЛЕВОМ КОНЦЕ:
+
+// Возвращает численное значение производной переданной функции в заданной точке.
+double numerical_derivative(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*))
+{
+	double step = (data->arg_b - data->arg_a) / data->intervals;
+	return (func(data, arg + step, res) - func(data, arg - step, res)) / (2 * step);
+}
+
+// Выполняет шаг метода Ньютона решения уравнения вида f(x) = 0.
+// Возвращает значение следующего приближения аргумента функции.
+double newton_step(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*))
+{
+	return arg - func(data, arg, res) / numerical_derivative(data, arg, res, func);
+}
+
+// Реализует метод Ньютона решения уравнения вида f(x) = 0 с заданной точностью.
+// После выполнения массив значений функций заполнен в соответствии с данными задачи.
+void newton_solve(BoundaryData *data, double arg, double *res, double eps)
+{
+	double der_a, diff = rk_adams_solve(data, arg, res);
+
+	while (fabs(diff) > eps)
+	{
+		der_a = newton_step(data, diff, res, rk_adams_solve);
+		diff = rk_adams_solve(data, der_a, res);
+	}
+}
+
+
+//// ФУНКЦИИ МЕТОДОВ АПОСТЕРИОРНОЙ ОЦЕНКИ ПОГРЕШНОСТИ ПО ПРАВИЛУ РУНГЕ:
+
+//Возвращает евклидово расстояние между двумя векторами.
+// Подразумевается, что второй массив в два раза длиннее первого.
+// При вычислениях используется каждая точка первого массива и каждая вторая точка второго.
+double vector_distance(uint len, double *y1, double *y2)
+{
+	double res = 0;
+
+	for (uint i = 0; i < len; ++i)
+		res += pow(y1[i] - y2[2 * i], 2);
+
+	return sqrt(res) / len;
+}
+
+double runge_error_step(BoundaryData *data_n, double arg, double *res_n, double *res_2n, double eps)
+{
+	BoundaryData data_2n = *data_n;
+	data_2n.intervals *= 2;
+
+	newton_solve(data_n, arg, res_n, eps);
+	newton_solve(&data_2n, arg, res_2n, eps);
+
+	return vector_distance(data_n->intervals + 1, res_n, res_2n) / ((1 << ACC_ORDER) - 1);
+}
+
+void runge_error_solve(BoundaryData *data, double arg, double **res, double eps)
+{
+	auto *res_doubled = (double*)malloc(sizeof(double) * (data->intervals * 2 + 1));
+
+	while (runge_error_step(data, arg, *res, res_doubled, eps) > eps)
+	{
+		data->intervals *= 2;
+		*res = (double*)realloc(*res, sizeof(double) * (data->intervals + 1));
+		memcpy(*res, res_doubled, sizeof(double) * data->intervals + 1);
+		res_doubled = (double*)realloc(res_doubled, sizeof(double) * (data->intervals * 2 + 1));
+	}
+
+	free(res_doubled);
+}
+
+
+//// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ:
+
+// Заполняет массив значениями с равномерным шагом в заданном диапазоне.
+// Возвращает разность между двумя последовательными значениями в массиве.
 double step_fill(uint len, double *arr, double start, double stop)
 {
 	double step = (stop - start) / (len - 1);
