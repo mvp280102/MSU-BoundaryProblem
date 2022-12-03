@@ -1,7 +1,7 @@
 #pragma once
 
-#include "px_func.h"
-#include "qx_func.h"
+#include "pxy_func.h"
+#include "qxy_func.h"
 #include "fxy_func.h"
 
 #define ACC_ORDER 5
