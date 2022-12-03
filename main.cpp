@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+    uint init_intervals;
 	double eps, *x_array, *y_array;
 
 	BoundaryData data = {};
@@ -26,6 +27,8 @@ int main(int argc, char *argv[])
 
 	fscanf_s(in_file, "%lf %lf %lf %lf %lf %d", &data.arg_a, &data.arg_b, &data.func_a, &data.func_b, &eps, &data.intervals);
 
+    init_intervals = data.intervals;
+
 	y_array = (double*)malloc(sizeof(double) * (data.intervals + 1));
 
 	runge_error_solve(&data, -1, &y_array, eps);
@@ -33,9 +36,9 @@ int main(int argc, char *argv[])
 	x_array = (double*)malloc(sizeof(double) * (data.intervals + 1));
 	step_fill(data.intervals + 1, x_array, data.arg_a, data.arg_b);
 
-	fprintf(out_file, "%d\n", data.intervals);
+    fprintf(out_file, "%d\n", init_intervals);
 
-	for (uint i = 0; i < data.intervals + 1; ++i)
+	for (uint i = 0; i < data.intervals + 1; i += (data.intervals / init_intervals))
 		fprintf(out_file, "%lf\n", y_array[i]);
 
 	plot_build(1024, data.intervals + 1, x_array, y_array, argv[3]);
