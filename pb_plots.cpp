@@ -1,4 +1,5 @@
 #include "pb_plots.h"
+#include <cstdio>
 
 // -----------------
 
@@ -30,6 +31,8 @@ int FreeAllocations(){
 	memory = nullptr;
 
 	//printf("Freed %ld\n", total);
+
+    return 0;
 }
 
 void *Allocate(int64_t size){
