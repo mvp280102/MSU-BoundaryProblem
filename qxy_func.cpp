@@ -1,4 +1,4 @@
-#include "qx_func.h"
+#include "qxy_func.h"
 
 double qx_func(double x, double y)
 {
