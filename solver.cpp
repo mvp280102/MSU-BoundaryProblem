@@ -18,6 +18,7 @@ double right_expr_z2(double x, double z2, double z1)
 
 //// ФУНКЦИИ ЧИСЛЕННЫХ МЕТОДОВ РЕШЕНИЯ СИСТЕМЫ ДИФФЕРЕНЦИАЛЬНЫХ УРАВНЕНИЙ:
 
+// Выполняет шаг метода Рунге-Кутты 4-го порядка.
 void rk_step(uint idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double))
 {
 	double k1 = expr(arg[idx - 1], cur[idx - 1], other[idx - 1]);
@@ -28,6 +29,7 @@ void rk_step(uint idx, double *arg, double *cur, double *other, double step, dou
 	cur[idx] = cur[idx - 1] + step / 6 * (k1 + 2 * k2 + 2 * k3 + k4);
 }
 
+// Выполняет шаг метода Адамса-Мултона 5-го порядка.
 void adams_step(uint idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double))
 {
 	double predictor_cfs[ACC_ORDER] = { 1901.0 / 720, 1387.0 / 360, 109.0 / 30, 637.0 / 360, 251.0 / 720 },
@@ -47,6 +49,8 @@ void adams_step(uint idx, double *arg, double *cur, double *other, double step, 
 	cur[idx] = cur[idx - 1] + step * corrector_value;
 }
 
+// Решает систему уравнений методами Рунге-Кутты и Адамса-Мултона при заданном значении производной на левом конце.
+// Возвращает разность между полученным и заданным значениями искомой функции на правом конце отрезка.
 double rk_adams_solve(BoundaryData *data, double der_a, double *res)
 {
 	auto *x_array = (double*)malloc(sizeof(double) * (data->intervals + 1));
@@ -93,7 +97,6 @@ double newton_step(BoundaryData *data, double arg, double *res, double (*func)(B
 }
 
 // Реализует метод Ньютона решения уравнения вида f(x) = 0 с заданной точностью.
-// После выполнения массив значений функций заполнен в соответствии с данными задачи.
 void newton_solve(BoundaryData *data, double arg, double *res, double eps)
 {
 	double der_a, diff = rk_adams_solve(data, arg, res);
@@ -108,9 +111,7 @@ void newton_solve(BoundaryData *data, double arg, double *res, double eps)
 
 //// ФУНКЦИИ МЕТОДОВ АПОСТЕРИОРНОЙ ОЦЕНКИ ПОГРЕШНОСТИ ПО ПРАВИЛУ РУНГЕ:
 
-//Возвращает евклидово расстояние между двумя векторами.
-// Подразумевается, что второй массив в два раза длиннее первого.
-// При вычислениях используется каждая точка первого массива и каждая вторая точка второго.
+// Возвращает евклидово расстояние между двумя векторами.
 double vector_distance(uint len, double *y1, double *y2)
 {
 	double res = 0;
@@ -121,6 +122,8 @@ double vector_distance(uint len, double *y1, double *y2)
 	return sqrt(res) / len;
 }
 
+// Выполняет шаг метода Рунге апостериорной оценки погрешности.
+// Возвращает значение погрешности при количестве узлов, в два раза большем исходного.
 double runge_error_step(BoundaryData *data_n, double arg, double *res_n, double *res_2n, double eps)
 {
 	BoundaryData data_2n = *data_n;
@@ -132,6 +135,7 @@ double runge_error_step(BoundaryData *data_n, double arg, double *res_n, double 
 	return vector_distance(data_n->intervals + 1, res_n, res_2n) / ((1 << ACC_ORDER) - 1);
 }
 
+// Реализует метод Рунге апостериорной оценки погрешности.
 void runge_error_solve(BoundaryData *data, double arg, double **res, double eps)
 {
 	auto *res_doubled = (double*)malloc(sizeof(double) * (data->intervals * 2 + 1));
