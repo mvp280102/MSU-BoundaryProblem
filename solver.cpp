@@ -168,3 +168,11 @@ double step_fill(uint len, double *arr, double start, double stop)
 
 	return step;
 }
+
+// Заполняет массив значениями функции на заданных в другом массиве значениях аргумента.
+// Подразумевается, что массивы значений аргумента и функции имеют одинаковую длину.
+void func_fill(uint len, double *arg, double *res, double (*func)(double))
+{
+    for (uint i = 0; i < len; ++i)
+        res[i] = func(arg[i]);
+}

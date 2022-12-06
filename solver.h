@@ -3,6 +3,7 @@
 #include "pxy_func.h"
 #include "qxy_func.h"
 #include "fxy_func.h"
+#include "yx_func.h"
 
 #define ACC_ORDER 5
 
@@ -189,3 +190,16 @@ void runge_error_solve(BoundaryData *data, double arg, double **res, double eps)
  * double stop - правый конец правый конец
  */
 double step_fill(uint len, double *arr, double start, double stop);
+
+/*
+ * ОПИСАНИЕ:
+ * Заполняет массив значениями функции на заданных в другом массиве значениях аргумента.
+ * Подразумевается, что массивы значений аргумента и функции имеют одинаковую длину.
+ *
+ * ПАРАМЕТРЫ:
+ * uint len - длина используемых массивов
+ * double *arg - массив значений аргумента
+ * double *res - массив значений функции
+ * double (*func) - функция
+ */
+void func_fill(uint len, double *arg, double *res, double (*func)(double));
