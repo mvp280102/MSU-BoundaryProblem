@@ -1,9 +1,7 @@
 #include "plotter.h"
 
-/*
- * Строит график функции и выводит его изображение в PNG-файл.
- */
-void plot_build(uint size, uint len, double *arg, double *res, char* filename)
+// Строит график функции и выводит его изображение в PNG-файл.
+void plot_build(uint size, char* filename, uint len, double *arg, double *res)
 {
 	RGBABitmapImageReference *canvas_reference = CreateRGBABitmapImageReference();
 	StringReference *error_message = CreateStringReference((wchar_t*)"Plot building error!\n", 21);

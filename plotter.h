@@ -8,9 +8,9 @@
  *
  * ПАРАМЕТРЫ:
  * uint size - размер изображения
- * uint len - длина массивов аргументов и значений функции
- * double *arg - массив аргументов функции
- * double *res - массив значений функции
  * char* filename - имя выходного файла
+ * uint len - длина массивов значений аргумента и функции
+ * double *arg - массив значений аргумента
+ * double *res - массив значений функции
  */
-void plot_build(uint size, uint len, double *arg, double *res, char* filename);
+void plot_build(uint size, char* filename, uint len, double *arg, double *res);
