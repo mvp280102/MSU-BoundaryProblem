@@ -2,15 +2,18 @@
 
 #include "headers.h"
 
+
 /*
  * ОПИСАНИЕ:
- * Строит график функции и выводит его изображение в PNG-файл.
+ * Строит графики одной или двух функций на одной координатной плоскости, и выводит изображение в PNG-файл.
+ * Чтобы построить график одной функции, достаточно не передавать массив значений второй.
  *
  * ПАРАМЕТРЫ:
  * uint size - размер изображения
  * char* filename - имя выходного файла
- * uint len - длина массивов значений аргумента и функции
+ * uint len - длина массивов значений аргумента и функций
  * double *arg - массив значений аргумента
- * double *res - массив значений функции
+ * double *func1 - массив значений первой функции
+ * double *func2 - массив значений второй функции
  */
-void plot_build(uint size, char* filename, uint len, double *arg, double *res);
+void plot_build(uint size, char* filename, uint len, double *arg, double *func1, double *func2 = nullptr);

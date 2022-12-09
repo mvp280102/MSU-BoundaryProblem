@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	}
 
     uint init_intervals;
-	double eps, *x_array, *y_array;
+	double eps, *x_array, *y_approx, *y_exact;
 
 	BoundaryData data = {};
 
@@ -29,22 +29,26 @@ int main(int argc, char *argv[])
 
     init_intervals = data.intervals;
 
-	y_array = (double*)malloc(sizeof(double) * (data.intervals + 1));
+    y_approx = (double*)malloc(sizeof(double) * (data.intervals + 1));
 
-	runge_error_solve(&data, -1, &y_array, eps);
+	runge_error_solve(&data, -1, &y_approx, eps);
 
 	x_array = (double*)malloc(sizeof(double) * (data.intervals + 1));
 	step_fill(data.intervals + 1, x_array, data.arg_a, data.arg_b);
 
+    y_exact = (double*)malloc(sizeof(double) * (data.intervals + 1));
+    func_fill(data.intervals + 1, x_array, y_exact, yx_func);
+
     fprintf(out_file, "%d\n", init_intervals);
 
 	for (uint i = 0; i < data.intervals + 1; i += (data.intervals / init_intervals))
-		fprintf(out_file, "%lf\n", y_array[i]);
+		fprintf(out_file, "%lf\n", y_approx[i]);
 
-	plot_build(1024, data.intervals + 1, x_array, y_array, argv[3]);
+	plot_build(1024, argv[3], data.intervals + 1, x_array, y_approx, y_exact);
 
 	free(x_array);
-	free(y_array);
+    free(y_exact);
+	free(y_approx);
 
 	fclose(out_file);
 	fclose(in_file);
