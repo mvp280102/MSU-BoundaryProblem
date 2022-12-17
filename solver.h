@@ -10,7 +10,7 @@
 // Начальные данные для решения краевой задачи.
 struct BoundaryData
 {
-	uint intervals;								// Количество узлов отрезка.
+	size_t intervals;								// Количество узлов отрезка.
 
 	double arg_a;								// Координата левого конца отрезка.
 	double arg_b;								// Координата правого конца отрезка.
@@ -59,7 +59,7 @@ double right_expr_z2(double x, double z2, double z1);
  * double step - разность двух последовательных узлов
  * double (*expr) - правая часть решаемого уравнения
  */
-void rk_step(uint idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double));
+void rk_step(size_t idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double));
 
 /*
  * ОПИСАНИЕ:
@@ -74,7 +74,7 @@ void rk_step(uint idx, double *arg, double *cur, double *other, double step, dou
  * double step - разность двух последовательных узлов
  * double (*expr) - правая часть решаемого уравнения
  */
-void adams_step(uint idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double));
+void adams_step(size_t idx, double *arg, double *cur, double *other, double step, double (*expr)(double, double, double));
 
 /*
  * ОПИСАНИЕ:
@@ -146,7 +146,7 @@ void newton_solve(BoundaryData *data, double arg, double *res, double eps);
  * double *y1 - первый вектор
  * double *y2 - второй вектор
  */
-double vector_distance(uint len, double *y1, double *y2);
+double vector_distance(size_t len, double *y1, double *y2);
 
 /*
  * ОПИСАНИЕ:
@@ -189,7 +189,7 @@ void runge_error_solve(BoundaryData *data, double arg, double **res, double eps)
  * double start - левый конец диапазона
  * double stop - правый конец правый конец
  */
-double step_fill(uint len, double *arr, double start, double stop);
+double step_fill(size_t len, double *arr, double start, double stop);
 
 /*
  * ОПИСАНИЕ:
@@ -202,4 +202,4 @@ double step_fill(uint len, double *arr, double start, double stop);
  * double *res - массив значений функции
  * double (*func) - функция
  */
-void func_fill(uint len, double *arg, double *res, double (*func)(double));
+void func_fill(size_t len, double *arg, double *res, double (*func)(double));

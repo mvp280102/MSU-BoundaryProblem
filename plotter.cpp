@@ -2,9 +2,9 @@
 
 
 // Строит графики одной или двух функций на одной координатной плоскости, и выводит изображение в PNG-файл.
-void plot_build(uint size, char* filename, uint len, double *arg, double *func1, double *func2)
+void plot_build(size_t size, char* filename, size_t len, double *arg, double *func1, double *func2)
 {
-    uint series_len = 1;
+    size_t series_len = 1;
 
     StringReference *error_message = CreateStringReference((wchar_t*)"Plot building error!\n", 21);
 	RGBABitmapImageReference *canvas_reference = CreateRGBABitmapImageReference();

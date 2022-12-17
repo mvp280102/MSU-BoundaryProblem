@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-    uint init_intervals;
+    size_t init_intervals;
 	double eps, *x_array, *y_approx, *y_exact;
 
 	BoundaryData data = {};
@@ -39,9 +39,9 @@ int main(int argc, char *argv[])
     y_exact = (double*)malloc(sizeof(double) * (data.intervals + 1));
     func_fill(data.intervals + 1, x_array, y_exact, yx_func);
 
-    fprintf(out_file, "%d\n", init_intervals);
+    fprintf(out_file, "%zu\n", init_intervals);
 
-	for (uint i = 0; i < data.intervals + 1; i += (data.intervals / init_intervals))
+	for (size_t i = 0; i < data.intervals + 1; i += (data.intervals / init_intervals))
 		fprintf(out_file, "%lf\n", y_approx[i]);
 
 	plot_build(1024, argv[3], data.intervals + 1, x_array, y_approx, y_exact);

@@ -17,6 +17,3 @@
 // Сообщения об ошибках:
 #define ARGS_ERROR "Invalid arguments amount!\n"
 #define FILES_ERROR "File opening error!\n"
-
-// Для удобства написания кода:
-typedef unsigned int uint;

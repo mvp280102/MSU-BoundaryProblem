@@ -16,4 +16,4 @@
  * double *func1 - массив значений первой функции
  * double *func2 - массив значений второй функции
  */
-void plot_build(uint size, char* filename, uint len, double *arg, double *func1, double *func2 = nullptr);
+void plot_build(size_t size, char* filename, size_t len, double *arg, double *func1, double *func2 = nullptr);
