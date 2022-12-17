@@ -1,9 +1,9 @@
-#include <cstdlib>
-#include <cstdbool>
-#include <cmath>
-#include <cstring>
-#include <cwchar>
-#include <cstdint>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <math.h>
+#include <string.h>
+#include <wchar.h>
+#include <stdint.h>
 
 #define strparam(str) (str), wcslen(str)
 

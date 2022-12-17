@@ -1,5 +1,4 @@
 #include "pb_plots.h"
-#include <cstdio>
 
 // -----------------
 
@@ -9,8 +8,8 @@ typedef struct Memory{
 	struct Memory *next;
 } Memory;
 
-Memory *memoryStart = nullptr;
-Memory *memory = nullptr;
+Memory *memoryStart = NULL;
+Memory *memory = NULL;
 
 int FreeAllocations(){
 	Memory *cur, *prev;
@@ -19,7 +18,7 @@ int FreeAllocations(){
 	total = 0;
 	cur = memoryStart;
 
-	while(cur != nullptr){
+	while(cur != NULL){
 		free(cur->mem);
 		total += cur->size;
 		prev = cur;
@@ -27,8 +26,8 @@ int FreeAllocations(){
 		free(prev);
 	}
 
-	memoryStart = nullptr;
-	memory = nullptr;
+	memoryStart = NULL;
+	memory = NULL;
 
 	//printf("Freed %ld\n", total);
 
@@ -38,7 +37,7 @@ int FreeAllocations(){
 void *Allocate(int64_t size){
 	void *addr;
 
-	if(memoryStart == nullptr){
+	if(memoryStart == NULL){
 		memoryStart = (Memory*)malloc(sizeof(Memory));
 		memory = memoryStart;
 	}else{
@@ -46,7 +45,7 @@ void *Allocate(int64_t size){
 		memory = memory->next;
 	}
 
-	memory->next = nullptr;
+	memory->next = NULL;
 	addr = malloc(size);
 	memory->size = size;
 	memory->mem = addr;

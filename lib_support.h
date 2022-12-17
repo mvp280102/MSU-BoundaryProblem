@@ -1,5 +1,5 @@
-#include <cstdlib>
-#include <cstdio>
+#include <stdlib.h>
+#include <stdio.h>
 
 unsigned char *DoubleArrayToByteArray(double *data, size_t length);
 void WriteToFile(double *data, size_t dataLength, char *filename);
