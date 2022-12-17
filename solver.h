@@ -1,9 +1,6 @@
 #pragma once
 
-#include "pxy_func.h"
-#include "qxy_func.h"
-#include "fxy_func.h"
-#include "yx_func.h"
+#include "func.h"
 
 #define ACC_ORDER 5
 

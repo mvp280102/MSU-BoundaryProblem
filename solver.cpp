@@ -12,7 +12,7 @@ double right_expr_z1(double x, double z1, double z2)
 // Возвращает значение второго уравнения системы на текущем шаге.
 double right_expr_z2(double x, double z2, double z1)
 {
-	return -1 * px_func(x, z1) * z2 - qx_func(x, z1) * z1 + fxy_func(x, z1);
+	return -1 * px_func(x) * z2 - qx_func(x) * z1 + fxy_func(x, z1);
 }
 
 
