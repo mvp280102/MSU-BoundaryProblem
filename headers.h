@@ -1,14 +1,14 @@
 #pragma once
 
 // Ввод-вывод:
-#include <cstdio>
+#include <stdio.h>
 
 // Работа с памятью:
 #include <mem.h>
-#include <cstdlib>
+#include <stdlib.h>
 
 // Математические функции:
-#include <cmath>
+#include <math.h>
 
 // Построение графика (pbPlots):
 #include "pb_plots.h"

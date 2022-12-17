@@ -53,10 +53,10 @@ void adams_step(size_t idx, double *arg, double *cur, double *other, double step
 // Возвращает разность между полученным и заданным значениями искомой функции на правом конце отрезка.
 double rk_adams_solve(BoundaryData *data, double der_a, double *res)
 {
-	auto *x_array = (double*)malloc(sizeof(double) * (data->intervals + 1));
-	auto step = step_fill(data->intervals + 1, x_array, data->arg_a, data->arg_b);
+	double *x_array = (double*)malloc(sizeof(double) * (data->intervals + 1));
+	double step = step_fill(data->intervals + 1, x_array, data->arg_a, data->arg_b);
 
-	auto *z_array = (double*)malloc(sizeof(double) * (data->intervals + 1));
+	double *z_array = (double*)malloc(sizeof(double) * (data->intervals + 1));
 	z_array[0] = der_a;
 
 	res[0] = data->func_a;
@@ -85,7 +85,7 @@ double rk_adams_solve(BoundaryData *data, double der_a, double *res)
 // Возвращает численное значение производной переданной функции в заданной точке.
 double numerical_derivative(BoundaryData *data, double arg, double *res, double (*func)(BoundaryData*, double, double*))
 {
-	double step = (data->arg_b - data->arg_a) / data->intervals;
+	double step = (data->arg_b - data->arg_a) / (double)data->intervals;
 	return (func(data, arg + step, res) - func(data, arg - step, res)) / (2 * step);
 }
 
@@ -119,7 +119,7 @@ double vector_distance(size_t len, double *y1, double *y2)
 	for (size_t i = 0; i < len; ++i)
 		res += pow(y1[i] - y2[2 * i], 2);
 
-	return sqrt(res) / len;
+	return sqrt(res) / (double)len;
 }
 
 // Выполняет шаг метода Рунге апостериорной оценки погрешности.
@@ -138,7 +138,7 @@ double runge_error_step(BoundaryData *data_n, double arg, double *res_n, double 
 // Реализует метод Рунге апостериорной оценки погрешности.
 void runge_error_solve(BoundaryData *data, double arg, double **res, double eps)
 {
-	auto *res_doubled = (double*)malloc(sizeof(double) * (data->intervals * 2 + 1));
+	double *res_doubled = (double*)malloc(sizeof(double) * (data->intervals * 2 + 1));
 
 	while (runge_error_step(data, arg, *res, res_doubled, eps) > eps)
 	{
@@ -158,7 +158,7 @@ void runge_error_solve(BoundaryData *data, double arg, double **res, double eps)
 // Возвращает разность между двумя последовательными значениями в массиве.
 double step_fill(size_t len, double *arr, double start, double stop)
 {
-	double step = (stop - start) / (len - 1);
+	double step = (stop - start) / ((double)len - 1);
 
 	arr[0] = start;
 	arr[len - 1] = stop;

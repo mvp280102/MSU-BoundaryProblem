@@ -5,7 +5,7 @@
 #define ACC_ORDER 5
 
 // Начальные данные для решения краевой задачи.
-struct BoundaryData
+typedef struct BoundaryData
 {
 	size_t intervals;								// Количество узлов отрезка.
 
@@ -13,7 +13,7 @@ struct BoundaryData
 	double arg_b;								// Координата правого конца отрезка.
 	double func_a;								// Значение функции на левом конце отрезка.
 	double func_b;								// Значение функции на правом конце отрезка.
-};
+} BoundaryData;
 
 
 //// ФУНКЦИИ СИСТЕМЫ ДИФФЕРЕНЦИАЛЬНЫХ УРАВНЕНИЙ (подробнее - readme.md), К КОТОРОЙ СВОДИТСЯ ИСХОДНАЯ КРАЕВАЯ ЗАДАЧА:

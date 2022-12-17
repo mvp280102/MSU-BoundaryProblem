@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 	for (size_t i = 0; i < data.intervals + 1; i += (data.intervals / init_intervals))
 		fprintf(out_file, "%lf\n", y_approx[i]);
 
-	plot_build(1024, argv[3], data.intervals + 1, x_array, y_approx, y_exact);
+	plot_build(1024, argv[3], data.intervals + 1, x_array, y_approx, NULL);
 
 	free(x_array);
     free(y_exact);

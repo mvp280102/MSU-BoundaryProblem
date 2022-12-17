@@ -19,7 +19,7 @@ void plot_build(size_t size, char* filename, size_t len, double *arg, double *fu
     series1->linearInterpolation = false;
     series1->color = CreateRGBColor(1, 0, 0);
 
-    if (func2)
+    if (func2 != NULL)
     {
         series_len = 2;
 
@@ -33,8 +33,8 @@ void plot_build(size_t size, char* filename, size_t len, double *arg, double *fu
     }
 
     settings =GetDefaultScatterPlotSettings();
-    settings->width = size;
-    settings->height = size;
+    settings->width = (double)size;
+    settings->height = (double)size;
     settings->autoPadding = true;
     settings->autoBoundaries = true;
 
