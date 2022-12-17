@@ -171,6 +171,7 @@ double step_fill(size_t len, double *arr, double start, double stop)
 
 // Заполняет массив значениями функции на заданных в другом массиве значениях аргумента.
 // Подразумевается, что массивы значений аргумента и функции имеют одинаковую длину.
+// Если вместо указателя на функцию передается NULL, заполнения не происходит.
 void func_fill(size_t len, double *arg, double *res, double (*func)(double))
 {
     if (func)

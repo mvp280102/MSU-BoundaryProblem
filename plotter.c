@@ -2,6 +2,7 @@
 
 
 // Строит графики одной или двух функций на одной координатной плоскости, и выводит изображение в PNG-файл.
+// Чтобы построить график одной функции, вместо массива значений второй функции передается NULL.
 void plot_build(size_t size, char* filename, size_t len, double *arg, double *func1, double *func2)
 {
     size_t series_len = 1;
@@ -19,7 +20,7 @@ void plot_build(size_t size, char* filename, size_t len, double *arg, double *fu
     series1->linearInterpolation = false;
     series1->color = CreateRGBColor(1, 0, 0);
 
-    if (func2 != NULL)
+    if (func2)
     {
         series_len = 2;
 
