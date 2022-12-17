@@ -173,6 +173,7 @@ double step_fill(size_t len, double *arr, double start, double stop)
 // Подразумевается, что массивы значений аргумента и функции имеют одинаковую длину.
 void func_fill(size_t len, double *arg, double *res, double (*func)(double))
 {
-    for (size_t i = 0; i < len; ++i)
-        res[i] = func(arg[i]);
+    if (func)
+        for (size_t i = 0; i < len; ++i)
+            res[i] = func(arg[i]);
 }

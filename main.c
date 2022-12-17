@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	step_fill(data.intervals + 1, x_array, data.arg_a, data.arg_b);
 
     y_exact = (double*)malloc(sizeof(double) * (data.intervals + 1));
-    func_fill(data.intervals + 1, x_array, y_exact, yx_func);
+    func_fill(data.intervals + 1, x_array, y_exact, NULL);
 
     fprintf(out_file, "%zu\n", init_intervals);
 
