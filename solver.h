@@ -2,8 +2,10 @@
 
 #include "func.h"
 
+
 // Порядок точности используемого метода.
 #define ACC_ORDER 5
+
 
 // Начальные данные для решения краевой задачи.
 typedef struct BoundaryData
