@@ -1,6 +1,7 @@
 #include "solver.h"
 #include "plotter.h"
 
+
 int main(int argc, char *argv[])
 {
     if (argc != 4)
