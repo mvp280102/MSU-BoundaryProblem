@@ -8,7 +8,7 @@ void plot_build(size_t size, char* filename, size_t len, double *arg, double *fu
     size_t series_len = 1;
 
     StringReference *error_message = CreateStringReference((wchar_t*)"Plot building error!\n", 21);
-	RGBABitmapImageReference *canvas_reference = CreateRGBABitmapImageReference();
+    RGBABitmapImageReference *canvas_reference = CreateRGBABitmapImageReference();
     ScatterPlotSeries **series, *series1, *series2;
     ScatterPlotSettings *settings;
 
@@ -48,20 +48,20 @@ void plot_build(size_t size, char* filename, size_t len, double *arg, double *fu
     settings->scatterPlotSeries = series;
     settings->scatterPlotSeriesLength = series_len;
 
-	if (DrawScatterPlotFromSettings(canvas_reference, settings, error_message))
-	{
-		size_t length;
-		double *png_data = ConvertToPNG(&length, canvas_reference->image);
+    if (DrawScatterPlotFromSettings(canvas_reference, settings, error_message))
+    {
+        size_t length;
+        double *png_data = ConvertToPNG(&length, canvas_reference->image);
 
-		WriteToFile(png_data, length, filename);
-		DeleteImage(canvas_reference->image);
-	}
-	else
-	{
-		printf("%ls\nAborting application!\n", error_message->string);
-		exit(1);
-	}
+        WriteToFile(png_data, length, filename);
+        DeleteImage(canvas_reference->image);
+    }
+    else
+    {
+        printf("%ls\nAborting application!\n", error_message->string);
+        exit(1);
+    }
 
     free(series);
-	FreeAllocations();
+    FreeAllocations();
 }
