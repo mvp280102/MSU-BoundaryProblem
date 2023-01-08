@@ -5,10 +5,10 @@ int main(int argc, char *argv[])
 {
     if (argc != 4)
     {
-		printf(ARGS_ERROR);
-		printf("Aborting application!\n");
-		exit(1);
-	}
+        printf(ARGS_ERROR);
+        printf("Aborting application!\n");
+        exit(1);
+    }
 
     size_t init_intervals;
     double eps, *x_array, *y_approx, *y_exact;
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         printf(FILES_ERROR);
         printf("Aborting application!\n");
         exit(1);
-	}
+    }
 
     fscanf_s(in_file, "%lf %lf %lf %lf %lf %d", &data.arg_a, &data.arg_b, &data.func_a, &data.func_b, &eps, &data.intervals);
 
