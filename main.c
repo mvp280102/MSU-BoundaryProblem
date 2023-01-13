@@ -11,13 +11,17 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    size_t init_intervals;
-    double eps, *x_array, *y_approx, *y_exact;
+    size_t init_intervals;                      // Начальное количество узлов отрезка.
 
-    BoundaryData data = {};
+    double eps,                                 // Точность.
+           *x_array,                            // Массив узлов.
+           *y_approx,                           // Массив приближенных значений искомой функции.
+           *y_exact;                            // Массив точных значений искомой функции.
 
-    FILE *in_file = fopen(argv[1], "r"),
-         *out_file = fopen(argv[2], "w");
+    BoundaryData data = {};                     // Начальные данные для решения задачи.
+
+    FILE *in_file = fopen(argv[1], "r"),        // Входной файл.
+         *out_file = fopen(argv[2], "w");       // Выходной файл.
 
     if (!in_file || !out_file)
     {
