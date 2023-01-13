@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
     free(y_exact);
     free(y_approx);
 
-    fclose(out_file);
     fclose(in_file);
+    fclose(out_file);
 
     return 0;
 }
